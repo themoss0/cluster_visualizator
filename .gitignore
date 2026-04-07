@@ -1,0 +1,4 @@
+# Игнорировать кэш Python + папку .vscode 
+__pycache__/
+*.pyc
+.vscode/*
