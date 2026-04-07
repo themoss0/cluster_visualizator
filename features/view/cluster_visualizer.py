@@ -3,11 +3,15 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from scipy.spatial import ConvexHull
 
+from core.di.injection import get_calculate_service
+from features.calculations.services.calculate_service import CalculateService
+
 # ----------------------------------------------------------------------
 # 3. СТАТИСТИКА И ВЫПУКЛЫЕ ОБОЛОЧКИ
 # ----------------------------------------------------------------------
 def cluster_statistics(points, labels, cluster_id):
     """Возвращает словарь со статистикой для указанного кластера."""
+    calculate_service: CalculateService = get_calculate_service()
     indices = [i for i, lab in enumerate(labels) if lab == cluster_id]
     if not indices:
         return None
@@ -16,6 +20,10 @@ def cluster_statistics(points, labels, cluster_id):
     ys = [p[1] for p in cluster_points]
     mean_x = np.mean(xs)
     mean_y = np.mean(ys)
+    centroid_minds = calculate_service.find_centroid_min_dist_sum(cluster_points)
+    centroid_am = calculate_service.find_centroid_arithmetic_mean(cluster_points)
+    anticentroid_maxds = calculate_service.find_anti_centroid_max_dist_sum(cluster_points)
+
     # Максимальное расстояние между точками (диаметр)
     max_dist = 0.0
     n = len(cluster_points)
@@ -31,7 +39,10 @@ def cluster_statistics(points, labels, cluster_id):
         'size': n,
         'mean_x': mean_x,
         'mean_y': mean_y,
-        'diameter': max_dist
+        'diameter': max_dist,
+        'centroid_min_dist_sum': centroid_minds,
+        'centroid_arithmetic_mean': centroid_am,
+        'anticentroid_max_dist_sum': anticentroid_maxds
     }
 
 def get_convex_hull(points):
@@ -64,6 +75,7 @@ class ClusterVisualizer:
         self.scatter = None          # ссылка на объект scatter
         self.hull_patch = None       # полигон выпуклой оболочки
         self.current_highlight = None  # выделенный кластер (id или None)
+        
 
         self._init_plot()
         self._connect_events()
@@ -136,6 +148,10 @@ class ClusterVisualizer:
                 print(f"Среднее X: {stats['mean_x']:.4f}")
                 print(f"Среднее Y: {stats['mean_y']:.4f}")
                 print(f"Диаметр (макс. расстояние): {stats['diameter']:.4f}")
+                print(f"\n--- Кластер {stats['cluster_id']}: Центроиды ---")
+                print(f"Центроид (мин. сумма расст.): ({stats['centroid_min_dist_sum'][0]:.4f}, {stats['centroid_min_dist_sum'][1]:.4f})")
+                print(f"Центроид (ср.ариф. всех точек): ({stats['centroid_arithmetic_mean'][0]:.4f}, {stats['centroid_arithmetic_mean'][1]:.4f})")
+                print(f"Антицентроид (макс. сумма расст.): ({stats['anticentroid_max_dist_sum'][0]:.4f}, {stats['anticentroid_max_dist_sum'][1]:.4f})")
             else:
                 print(f"\nНе удалось вычислить статистику для кластера {cluster_id}.")
 
