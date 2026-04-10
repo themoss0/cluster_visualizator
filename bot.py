@@ -1,13 +1,13 @@
-import sys
+import os
 import asyncio
 import logging
 from aiogram import Bot, Dispatcher
-import config   # config.py в той же папке
+from config import BOT_TOKEN
 from core.di.injection import load_dependencies
 from handlers import register_handlers
 
 logging.basicConfig(level=logging.INFO)
-bot = Bot(token=config.BOT_TOKEN)
+bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 register_handlers(dp)
 
