@@ -1,4 +1,1 @@
 aiogram
-matplotlib
-numpy
-scipy
