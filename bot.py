@@ -2,7 +2,6 @@ import os
 import asyncio
 import logging
 from aiogram import Bot, Dispatcher
-from config import BOT_TOKEN
 from core.di.injection import load_dependencies
 from handlers import register_handlers
 
