@@ -2,3 +2,4 @@
 __pycache__/
 *.pyc
 .vscode/*
+features/bot/config.py

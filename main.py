@@ -11,7 +11,10 @@ if __name__ == '__main__':
 
     file_service = get_file_service()
     calculate_service = get_calculate_service()
-    data = file_service.load_data(filename=n)
+    data = file_service.preset_lines(filename=n, extra_type='none')
+
+    if (len(data) == 0):
+        exit()
 
     clust = calculate_service.clusterize(data, 1.4)
     

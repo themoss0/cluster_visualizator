@@ -5,7 +5,7 @@ class CalculateService:
     def __init__(self, icalculate_repository: ICalculateRepository):
         self.calculate_repository=icalculate_repository
 
-    def clusterize(self, data:list[list], eps:float):
+    def clusterize(self, data:list[list], eps:float, extra_type: str='none'):
         """
         Разбивает точки на кластеры.
 
@@ -15,7 +15,7 @@ class CalculateService:
 
         - eps: Расстояние между точками при кластеризации.
         """
-        return self.calculate_repository.clusterize(data, eps)
+        return self.calculate_repository.clusterize(data, eps, extra_type)
     
 
     def find_centroid_min_dist_sum(self, cluster: list[list]):
